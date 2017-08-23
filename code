@@ -1,0 +1,87 @@
+
+// install the Arduino bluetooth controller app on your phone
+// for Mac: LightBlue
+// for iPhone: LightBlue Explorer
+// for Andriod: Arduino bluetooth controller
+
+// Before USB plugin :::  !!! keep the board away from metal things to avoid short the board!!!
+// connect USB port: the on board led on bluetooth and arduino nano will on
+// 
+//try to send 0, 1, 2, 3, 4 from phone to bluetooth
+
+char data = 0;            //Variable for storing received data
+int Rled = 6;
+int Gled = 10;
+float Temperature;
+
+void setup()
+{
+    Serial.begin(9600);   //Sets the baud for serial data transmission                               
+    pinMode(Rled, OUTPUT);  
+    pinMode(Gled, OUTPUT); 
+}
+void loop()
+{
+   if(Serial.available() > 0)      // Send data only when you receive data:
+   {
+      data = Serial.read();        //Read the incoming data & store into data
+      Serial.print(data);          //Print Value inside data in Serial monitor
+      Serial.print("\n");        
+      if(data == '1'){              // Checks whether value of data is equal to 1
+         digitalWrite(Rled, HIGH);
+         digitalWrite(Gled, HIGH);}   //If value is 1 then LEDs turn ON
+      else if(data == '0') {        //  Checks whether value of data is equal to 0
+         digitalWrite(Rled, LOW);
+         digitalWrite(Gled, LOW);}   //If value is 0 then LEDs turn OFF
+         
+      else if(data == '2') { // if value is 2 then blink the same way
+         while(1){
+          digitalWrite(Rled, HIGH);
+         digitalWrite(Gled, HIGH);
+         delay(1000);
+         digitalWrite(Rled, LOW);
+         digitalWrite(Gled, LOW);
+         delay(1000);
+         if(Serial.available() > 0) 
+            break;}
+          
+          }       
+       else if(data == '3') { // if value is 3 then blink differently 
+         while(1){
+          digitalWrite(Rled, HIGH);
+         digitalWrite(Gled, LOW);
+         delay(1000);
+         digitalWrite(Rled, LOW);
+         digitalWrite(Gled, HIGH);
+         delay(1000);
+         if(Serial.available() > 0) 
+            break;}
+          
+          }
+      else if(data == '4') {  // if value is 4 then get temperature readout back to phone
+        Temperature = ReadTemperature();
+        Serial.print("Temperature: "); 
+        Serial.print(Temperature);
+        Serial.println(" C"); 
+        
+        }
+   }
+}
+
+
+
+int ReadTemperature(){
+  int ThermistorPin = 14; // pin 14=A0for thermistor
+  int Vo;
+  float R1 = 10000;
+  float logR2, R2, T, Tc, Tf;
+  float c1 = 1.009249522e-03, c2 = 2.378405444e-04, c3 = 2.019202697e-07;
+
+  Vo = analogRead(ThermistorPin);
+  R2 = R1 * (1023.0 / (float)Vo - 1.0);
+  logR2 = log(R2);
+  T = (1.0 / (c1 + c2*logR2 + c3*logR2*logR2*logR2)); 
+  Tc = T - 273.15;
+  
+  return Tc;
+}
