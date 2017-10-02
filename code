@@ -71,7 +71,7 @@ void loop()
 
 
 int ReadTemperature(){
-  int ThermistorPin = 14; // pin 14=A0for thermistor
+  int ThermistorPin = A0; // pin A0 for thermistor
   int Vo;
   float R1 = 10000;
   float logR2, R2, T, Tc, Tf;
