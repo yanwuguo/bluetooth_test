@@ -12,6 +12,7 @@
 char data = 0;            //Variable for storing received data
 int Rled = 6;
 int Gled = 10;
+int Times = 3;
 float Temperature;
 
 void setup()
@@ -70,7 +71,7 @@ void loop()
 
 
 
-int ReadTemperature(){
+float ReadTemperature(){
   int ThermistorPin = A0; // pin A0 for thermistor
   int Vo;
   float R1 = 10000;
@@ -84,4 +85,15 @@ int ReadTemperature(){
   Tc = T - 273.15;
   
   return Tc;
+}
+
+// blink red LED
+void blinkred(Times)
+{
+    for(int x=0; x < Times-1; x++) {
+         digitalWrite(Rled, HIGH);
+         delay(1000);
+         digitalWrite(Rled, LOW);
+         delay(1000);
+         }
 }
